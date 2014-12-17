@@ -39,10 +39,6 @@ class PageController {
 		return true;
 	}
 	
-	public static function IsAdvanced() {
-		return false;
-	}
-	
 	public static function Priority() {
 		return (INT) 0;
 	}
