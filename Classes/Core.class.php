@@ -59,17 +59,14 @@ class Core {
 	function GetPageController($Page, $Index = 0) {
 		$Page = ((empty($Page)) ? 'Index' : ucfirst($Page));
 		$PageController['Files'] = array();
-		$PageController['Controller'] = array();
 		$PageController['Advanced'] = array();
 		$PageController['Priority'] = array();
 		$PageController['Simple'] = array();
-		$PageController['Files'] = glob($this->Dirname . '/PageController/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*Controller.php'); // See: http://us2.php.net/manual/en/userlandnaming.php
+		$PageController['Files'] = glob($this->Dirname . '/PageController/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*Controller{,Advanced}.php', GLOB_BRACE); // See: http://us2.php.net/manual/en/userlandnaming.php
 		foreach($PageController['Files'] as $Key => $Value) {
 			require_once $Value;
 			$Value = substr(basename($Value), 0, -4);
-			$PageController['Controller'][$Key] = $Value;
-			$Value = $PageController['Controller'][$Key];
-			if($Value::IsAdvanced()) {
+			if(substr($Value, -8) == 'Advanced') {
 				$PageController['Advanced'][$Key] = $Value;
 				$PageController['Priority'][$Key] = (INT) $Value::Priority();
 			} else

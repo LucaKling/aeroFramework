@@ -1,10 +1,6 @@
 <?php
-class NotFoundController extends PageController {
+class NotFoundControllerAdvanced extends PageController {
 	public static function IsResponsible($Page, $Config, $Database) {
-		return true;
-	}
-	
-	public static function IsAdvanced() {
 		return true;
 	}
 	

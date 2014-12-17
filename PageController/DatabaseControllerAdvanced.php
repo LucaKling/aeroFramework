@@ -1,10 +1,6 @@
 <?php
-class DatabaseController extends PageController {
+class DatabaseControllerAdvanced extends PageController {
 	public $Pages;
-	
-	public static function IsAdvanced() {
-		return true;
-	}
 	
 	public static function Priority() {
 		return (INT) 0;
