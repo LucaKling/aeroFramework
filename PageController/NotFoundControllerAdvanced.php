@@ -14,10 +14,9 @@ class NotFoundControllerAdvanced extends PageController {
 		$_SERVER['REDIRECT_STATUS'] = 404;
 		http_response_code(404);
 		$this->Meta = '';
-		$this->MetaTitle = 'Fehler 404 - Seite nicht gefunden | Luca Kling';
+		$this->MetaTitle = sprintf($this->MetaTitle, 'Fehler 404 - Seite nicht gefunden');
 		$this->Head = '';
 		$this->NavElements = '';
-		$this->GlobalTitle = 'Luca Kling';
 		$this->PageTitle = '404 - Seite nicht gefunden';
 		$baseuri = $this->BaseURI;
 		$uristring = implode('/', $this->RequestURI);
