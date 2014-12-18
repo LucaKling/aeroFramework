@@ -5,7 +5,7 @@ aeroCMS is a lightweight (not yet finished) Content Management System which is p
 
 ## Features?
 
-It already features a bunch of features, but there are definitely many more to come. 
+It already features a bunch of (technical) stuff, but there are definitely many more to come. 
 Here is a short overview about what you can expect: 
 
 * Create your own `PageController` for dynamic content
