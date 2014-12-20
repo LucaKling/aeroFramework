@@ -2,6 +2,8 @@
 class PageController {
 	public $Dirname;
 	public $BaseURI;
+	public $BasePageURI;
+	public $HomeURI;
 	public $Meta;
 	public $MetaTitle;
 	public $Head;
@@ -19,6 +21,8 @@ class PageController {
 			$this->$key = $value;
 		
 		$this->BaseURI = $this->Protocol . '://' . $this->Domain . ((strlen($this->URIPath) > 0) ? '/' . $this->URIPath : '');
+		$this->BasePageURI = $this->BaseURI . ((!$this->Rewrite) ? '/' . $this->Filename : '');
+		$this->HomeURI = $this->BaseURI;
 		$this->GlobalTitle = $this->Config->DV->GlobalTitle;
 		$this->MetaTitle = $this->Config->DV->MetaTitle;
 		
@@ -36,6 +40,11 @@ class PageController {
 	
 	final public function PrintBaseURI() {
 		echo $this->BaseURI;
+		return true;
+	}
+	
+	final public function PrintHomeURI() {
+		echo $this->HomeURI;
 		return true;
 	}
 	

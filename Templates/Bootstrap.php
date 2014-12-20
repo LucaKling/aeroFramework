@@ -35,7 +35,7 @@
 							<span class="icon-bar"></span>
 							<span class="icon-bar"></span>
 						</button>
-						<a class="navbar-brand" href="<?php $PageController->PrintBaseURI(); ?>"><?php $PageController->PrintGlobalTitle(); ?></a>
+						<a class="navbar-brand" href="<?php $PageController->PrintHomeURI(); ?>"><?php $PageController->PrintGlobalTitle(); ?></a>
 					</div>
 					<div id="navbar" class="navbar-collapse collapse">
 						<ul class="nav navbar-nav">

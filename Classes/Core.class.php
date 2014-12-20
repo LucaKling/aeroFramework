@@ -4,6 +4,7 @@ class Core {
 	public $Config;
 	
 	// Dir and file handling vars
+	public $Filename;
 	public $Dirname;
 	
 	// Template vars
@@ -18,6 +19,7 @@ class Core {
 	public $Protocol;
 	public $Domain;
 	public $URIPath;
+	public $Rewrite;
 	public $RequestURI;
 	public $Database;
 	public $OS;
@@ -55,7 +57,19 @@ class Core {
 			if(substr($this->URIPath, -1) == '/')
 				$this->URIPath = substr($this->URIPath, 0, -1);
 		}
-		$this->RequestURI = explode('/', ((empty($this->URIPath)) ? $_SERVER['REQUEST_URI'] : substr($_SERVER['REQUEST_URI'], strlen($this->URIPath)+1)));
+		$this->Rewrite = false;
+		if(function_exists('apache_get_modules')) {
+			if(in_array('mod_rewrite', apache_get_modules()))
+				$this->Rewrite = true;
+		} else if($this->Config->DV->{'Reachability.ForceRewrite'}) {
+			$this->Rewrite = true;
+		}
+		if($this->Rewrite) {
+			$this->RequestURI = ((empty($this->URIPath)) ? $_SERVER['REQUEST_URI'] : substr($_SERVER['REQUEST_URI'], strlen($this->URIPath)+1));
+		} else {
+			$this->RequestURI = $_SERVER['PATH_INFO'];
+		}
+		$this->RequestURI = explode('/', $this->RequestURI);
 		
 		// Settings template vars
 		$this->DefaultTemplate = $this->Config->DV->{'Template.Default'};
@@ -91,18 +105,17 @@ class Core {
 			} else
 				$PageController['Simple'][] = $Value;
 		}
-		echo '<pre>', print_r($PageController), '</pre>';
 		unset($Key, $Value, $Basename);
 		if(in_array($Page . 'Controller', $PageController['Simple'])) {
 			$Controller = $Page . 'Controller';
-			$this->PageController = new $Controller(array('Config' => $this->Config, 'Dirname' => $this->Dirname, 'RequestURI' => $this->RequestURI, 'Protocol' => $this->Protocol, 'Domain' => $this->Domain, 'URIPath' => $this->URIPath, 'Database' => $this->Database, 'ActiveTemplate' => $this->ActiveTemplate, 'DefaultTemplate' => $this->DefaultTemplate, 'ActiveSubTemplate' => $this->ActiveSubTemplate, 'DefaultSubTemplate' => $this->DefaultSubTemplate));
+			$this->PageController = new $Controller(array('Config' => $this->Config, 'Filename' => $this->Filename, 'Dirname' => $this->Dirname, 'RequestURI' => $this->RequestURI, 'Protocol' => $this->Protocol, 'Domain' => $this->Domain, 'URIPath' => $this->URIPath, 'Rewrite' => $this->Rewrite, 'Database' => $this->Database, 'ActiveTemplate' => $this->ActiveTemplate, 'DefaultTemplate' => $this->DefaultTemplate, 'ActiveSubTemplate' => $this->ActiveSubTemplate, 'DefaultSubTemplate' => $this->DefaultSubTemplate));
 			return true;
 		} else {
 			arsort($PageController['Priority'], SORT_NATURAL);
 			foreach($PageController['Priority'] as $Key => $Value) {
 				$Controller = $PageController['Advanced'][$Key];
 				if($Controller::IsResponsible($Page, $this->Config, $this->Database)) {
-					$this->PageController = new $Controller(array('Config' => $this->Config, 'Dirname' => $this->Dirname, 'RequestURI' => $this->RequestURI, 'Protocol' => $this->Protocol, 'Domain' => $this->Domain, 'URIPath' => $this->URIPath, 'Database' => $this->Database, 'ActiveTemplate' => $this->ActiveTemplate, 'DefaultTemplate' => $this->DefaultTemplate, 'ActiveSubTemplate' => $this->ActiveSubTemplate, 'DefaultSubTemplate' => $this->DefaultSubTemplate));
+					$this->PageController = new $Controller(array('Config' => $this->Config, 'Filename' => $this->Filename, 'Dirname' => $this->Dirname, 'RequestURI' => $this->RequestURI, 'Protocol' => $this->Protocol, 'Domain' => $this->Domain, 'URIPath' => $this->URIPath, 'Rewrite' => $this->Rewrite, 'Database' => $this->Database, 'ActiveTemplate' => $this->ActiveTemplate, 'DefaultTemplate' => $this->DefaultTemplate, 'ActiveSubTemplate' => $this->ActiveSubTemplate, 'DefaultSubTemplate' => $this->DefaultSubTemplate));
 					return true;
 				}
 			}
