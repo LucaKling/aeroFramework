@@ -14,6 +14,7 @@ class Core {
 	
 	// Misc vars
 	public $PageController;
+	public $DocumentRoot;
 	public $Protocol;
 	public $Domain;
 	public $URIPath;
@@ -26,7 +27,7 @@ class Core {
 		foreach(func_get_arg(0) as $key => $value)
 			$this->$key = $value;
 		
-		if(strtolower(substr(php_uname('s'), 0, 3)) == 'win') {
+		if(strtolower(substr(php_uname('s'), 0, 3)) == 'win') { // See: http://stackoverflow.com/questions/1482260/how-to-get-the-os-on-which-php-is-running
 			$this->OS = 'windows';
 			define('DS', '\\');
 		} else {
@@ -39,12 +40,16 @@ class Core {
 		$this->Config->WrapDatabaseConfig(array('Database' => $this->Database));
 		
 		// Checking Domain, path and protocol
-		$this->Protocol = (($this->Config->DV->{'Reachability.Protocol'} != null) ? $this->Config->DV->{'Reachability.Protocol'} : 'http');
+		$this->DocumentRoot = $_SERVER['DOCUMENT_ROOT'];
+		if(in_array(substr($this->DocumentRoot, -1), array('/', '\\'))) {
+			$this->DocumentRoot = substr($this->DocumentRoot, 0, -1);
+		}
+		$this->Protocol = (($this->Config->DV->{'Reachability.Protocol'} != null) ? $this->Config->DV->{'Reachability.Protocol'} : ((isset($_SERVER['HTTPS'])) ? (($_SERVER['HTTPS'] != null) ? 'https' : 'http') : 'http'));
 		$this->Domain = (($this->Config->DV->{'Reachability.Domain'} != null) ? $this->Config->DV->{'Reachability.Domain'} : $_SERVER['HTTP_HOST']);
 		$this->URIPath = $this->Config->DV->{'Reachability.URIPath'};
-		if($this->URIPath == null || $this->URIPath == '/') {
-			$this->URIPath = substr($this->Dirname, strlen($_SERVER['DOCUMENT_ROOT']));
-		} else {
+		if($this->URIPath == null || $this->URIPath == '/')
+			$this->URIPath = substr(str_replace('\\', '/', $this->Dirname), strlen($this->DocumentRoot)+1);
+		else {
 			if(substr($this->URIPath, 0, 1) == '/')
 				$this->URIPath = substr($this->URIPath, 1);
 			if(substr($this->URIPath, -1) == '/')
