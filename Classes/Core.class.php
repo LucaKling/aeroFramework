@@ -19,11 +19,20 @@ class Core {
 	public $URIPath;
 	public $RequestURI;
 	public $Database;
+	public $OS;
 	
 	function __construct() {
 		// Loading arg
 		foreach(func_get_arg(0) as $key => $value)
 			$this->$key = $value;
+		
+		if(strtolower(substr(php_uname('s'), 0, 3)) == 'win') {
+			$this->OS = 'windows';
+			define('DS', '\\');
+		} else {
+			$this->OS = 'linux';
+			define('DS', '/');
+		}
 		
 		$this->Config = new Config(array('Dirname' => $this->Dirname));
 		$this->Database = new Database(array('Config' => $this->Config));
@@ -62,10 +71,15 @@ class Core {
 		$PageController['Advanced'] = array();
 		$PageController['Priority'] = array();
 		$PageController['Simple'] = array();
-		$PageController['Files'] = glob($this->Dirname . '/PageController/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*Controller{,Advanced}.php', GLOB_BRACE); // See: http://us2.php.net/manual/en/userlandnaming.php
+		$PageController['Files'] = glob($this->Dirname . DS . 'PageController' . DS . '*Controller{,Advanced}.php', GLOB_BRACE);
 		foreach($PageController['Files'] as $Key => $Value) {
+			$Basename = basename($Value);
+			if(!preg_match('/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*Controller(|Advanced).php/', $Basename)) {  // See: http://us2.php.net/manual/en/userlandnaming.php
+				unset($PageController['Files'][$Key]);
+				continue;
+			}
 			require_once $Value;
-			$Value = substr(basename($Value), 0, -4);
+			$Value = substr($Basename, 0, -4);
 			if(substr($Value, -8) == 'Advanced') {
 				$PageController['Advanced'][$Key] = $Value;
 				$PageController['Priority'][$Key] = (INT) $Value::Priority();
@@ -73,7 +87,7 @@ class Core {
 				$PageController['Simple'][] = $Value;
 		}
 		echo '<pre>', print_r($PageController), '</pre>';
-		unset($Key, $Value);
+		unset($Key, $Value, $Basename);
 		if(in_array($Page . 'Controller', $PageController['Simple'])) {
 			$Controller = $Page . 'Controller';
 			$this->PageController = new $Controller(array('Config' => $this->Config, 'Dirname' => $this->Dirname, 'RequestURI' => $this->RequestURI, 'Protocol' => $this->Protocol, 'Domain' => $this->Domain, 'URIPath' => $this->URIPath, 'Database' => $this->Database, 'ActiveTemplate' => $this->ActiveTemplate, 'DefaultTemplate' => $this->DefaultTemplate, 'ActiveSubTemplate' => $this->ActiveSubTemplate, 'DefaultSubTemplate' => $this->DefaultSubTemplate));
@@ -99,19 +113,19 @@ class Core {
 			$$key = $value;
 		
 		if($ActiveSubTemplate != null) {
-			if(is_file($this->Dirname . '/Templates/' . $ActiveTemplate . '/' . $ActiveSubTemplate . '.php')) {
-				require_once $this->Dirname . '/Templates/' . $ActiveTemplate . '/' . $ActiveSubTemplate . '.php';
+			if(is_file($this->Dirname . DS . 'Templates' . DS . $ActiveTemplate . DS . $ActiveSubTemplate . '.php')) {
+				require_once $this->Dirname . DS . 'Templates' . DS . $ActiveTemplate . DS . $ActiveSubTemplate . '.php';
 				return true;
 			} else {
 				echo 'Fatal error: Could not find responsible template!';
 				exit(1);
 			}
 		} else {
-			if(is_file($this->Dirname . '/Templates/' . $ActiveTemplate . '.php')) {
-				require_once $this->Dirname . '/Templates/' . $ActiveTemplate . '.php';
+			if(is_file($this->Dirname . DS . 'Templates' . DS . $ActiveTemplate . '.php')) {
+				require_once $this->Dirname . DS . 'Templates' . DS . $ActiveTemplate . '.php';
 				return true;
-			} else if(is_file($this->Dirname . '/Templates/' . $ActiveTemplate . '/Template.php')) {
-				require_once $this->Dirname . '/Templates/' . $ActiveTemplate . '/Template.php';
+			} else if(is_file($this->Dirname . DS . 'Templates' . DS . $ActiveTemplate . DS . 'Template.php')) {
+				require_once $this->Dirname . DS . 'Templates' . DS . $ActiveTemplate . DS . 'Template.php';
 				return true;
 			} else {
 				echo 'Fatal error: Could not find responsible template!';
