@@ -14,6 +14,11 @@ class PageController {
 	public $FooterContents;
 	public $BodyScripts;
 	public $IsResponsible;
+	public $ClassName;
+	public $ClassHash;
+	public $PublicFolder;
+	public $PublicFolderURI;
+	public $PrivateFolder;
 	
 	final public function __construct() {
 		// Loading arg
@@ -25,6 +30,15 @@ class PageController {
 		$this->HomeURI = $this->BaseURI;
 		$this->GlobalTitle = $this->Config->DV->GlobalTitle;
 		$this->MetaTitle = $this->Config->DV->MetaTitle;
+		$this->ClassName = get_class($this);
+		$this->ClassHash = md5($this->ClassName . $this->Config->DV->Salt);
+		$this->PublicFolder = $this->Dirname . DS . 'Public' . DS . $this->ClassHash;
+		if(!is_dir($this->PublicFolder))
+			mkdir($this->PublicFolder, 0777, true);
+		$this->PublicFolderURI = $this->BaseURI . '/' . basename($this->PublicFolder);
+		$this->PrivateFolder = $this->Dirname . DS . 'Private' . DS . md5($this->ClassHash . $this->Config->DV->Salt); // Extra security (Public- differs from Private Folder)
+		if(!is_dir($this->PrivateFolder))
+			mkdir($this->PrivateFolder, 0777, true);
 		
 		// Run user-defined construct function
 		$this->Construct();
