@@ -48,6 +48,21 @@ class PageController {
 		return true;
 	}
 	
+	final public function RedirectInternal($URI, $StatusCode = 303, $IsPage = true) {
+		if($this->ForceLowerCase)
+			$URI = strtolower($URI);
+		$URI = ((substr($URI, 0, 1) != '/') ? '/' . $URI : $URI);
+		Header('Location: ' . (($IsPage) ? $this->BasePageURI : $this->BaseURI) . $URI, $StatusCode);
+		exit(0);
+		return true;
+	}
+	
+	final public function RedirectExternal($URI, $StatusCode = 303) {
+		Header('Location: ' . $URI, $StatusCode);
+		exit(0);
+		return true;
+	}
+	
 	public static function Priority() {
 		return (INT) 0;
 	}

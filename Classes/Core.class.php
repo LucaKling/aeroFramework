@@ -21,6 +21,7 @@ class Core {
 	public $URIPath;
 	public $Rewrite;
 	public $RequestURI;
+	public $ForceLowerCase;
 	public $Database;
 	public $OS;
 	
@@ -70,6 +71,7 @@ class Core {
 			$this->RequestURI = $_SERVER['PATH_INFO'];
 		}
 		$this->RequestURI = explode('/', $this->RequestURI);
+		$this->ForceLowerCase = (($this->Config->DV->{'Reachability.ForceLowerCase'}) ? true : false);
 		
 		// Settings template vars
 		$this->DefaultTemplate = $this->Config->DV->{'Template.Default'};
@@ -108,14 +110,14 @@ class Core {
 		unset($Key, $Value, $Basename);
 		if(in_array($Page . 'Controller', $PageController['Simple'])) {
 			$Controller = $Page . 'Controller';
-			$this->PageController = new $Controller(array('Config' => $this->Config, 'Filename' => $this->Filename, 'Dirname' => $this->Dirname, 'RequestURI' => $this->RequestURI, 'Protocol' => $this->Protocol, 'Domain' => $this->Domain, 'URIPath' => $this->URIPath, 'Rewrite' => $this->Rewrite, 'Database' => $this->Database, 'ActiveTemplate' => $this->ActiveTemplate, 'DefaultTemplate' => $this->DefaultTemplate, 'ActiveSubTemplate' => $this->ActiveSubTemplate, 'DefaultSubTemplate' => $this->DefaultSubTemplate));
+			$this->PageController = new $Controller(array('Config' => $this->Config, 'Filename' => $this->Filename, 'Dirname' => $this->Dirname, 'Protocol' => $this->Protocol, 'Domain' => $this->Domain, 'URIPath' => $this->URIPath, 'Rewrite' => $this->Rewrite, 'RequestURI' => $this->RequestURI, 'ForceLowerCase' => $this->ForceLowerCase, 'Database' => $this->Database, 'ActiveTemplate' => $this->ActiveTemplate, 'DefaultTemplate' => $this->DefaultTemplate, 'ActiveSubTemplate' => $this->ActiveSubTemplate, 'DefaultSubTemplate' => $this->DefaultSubTemplate));
 			return true;
 		} else {
 			arsort($PageController['Priority'], SORT_NATURAL);
 			foreach($PageController['Priority'] as $Key => $Value) {
 				$Controller = $PageController['Advanced'][$Key];
 				if($Controller::IsResponsible($Page, $this->Config, $this->Database)) {
-					$this->PageController = new $Controller(array('Config' => $this->Config, 'Filename' => $this->Filename, 'Dirname' => $this->Dirname, 'RequestURI' => $this->RequestURI, 'Protocol' => $this->Protocol, 'Domain' => $this->Domain, 'URIPath' => $this->URIPath, 'Rewrite' => $this->Rewrite, 'Database' => $this->Database, 'ActiveTemplate' => $this->ActiveTemplate, 'DefaultTemplate' => $this->DefaultTemplate, 'ActiveSubTemplate' => $this->ActiveSubTemplate, 'DefaultSubTemplate' => $this->DefaultSubTemplate));
+					$this->PageController = new $Controller(array('Config' => $this->Config, 'Filename' => $this->Filename, 'Dirname' => $this->Dirname, 'Protocol' => $this->Protocol, 'Domain' => $this->Domain, 'URIPath' => $this->URIPath, 'Rewrite' => $this->Rewrite, 'RequestURI' => $this->RequestURI, 'ForceLowerCase' => $this->ForceLowerCase, 'Database' => $this->Database, 'ActiveTemplate' => $this->ActiveTemplate, 'DefaultTemplate' => $this->DefaultTemplate, 'ActiveSubTemplate' => $this->ActiveSubTemplate, 'DefaultSubTemplate' => $this->DefaultSubTemplate));
 					return true;
 				}
 			}
