@@ -4,9 +4,11 @@ class Config {
 		// Loading arg
 		foreach(func_get_arg(0) as $key => $value)
 			$this->$key = $value;
-		
-		foreach(parse_ini_file($this->Dirname . '/Config/Main.config.php', true) as $key => $value)
-			$this->$key = (object) $value;
+		foreach(glob($this->Dirname . '/Config/*.config.php') as $File) {
+			$Name = explode('.', basename($File));
+			$Name = $Name[0];
+			$this->$Name = (object) parse_ini_file($File);
+		}
 		return true;
 	}
 	

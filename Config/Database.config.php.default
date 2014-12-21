@@ -1,0 +1,44 @@
+;<?php
+;die(); // For further security
+;/*
+
+; Database Settings
+[Database]
+
+; Database Driver (mysql is default and will be used if empty)
+Driver=""
+
+; Database File Path (For file-driven databases [e.g. sqlite, etc.] - will be preferred over host/port/socket if not empty)
+Path=""
+
+; Database Host (localhost is default and will be used if empty)
+Host=""
+
+; Database Port (3306 is default and will be used if empty)
+Port=""
+
+; Database Socket (socket will be preferred over host/port if not empty)
+Socket=""
+
+; Database Name
+Name=""
+
+; Database User
+User=""
+
+; Password for Database User
+Password=""
+
+; Database Charset (e.g. utf8)
+Charset=""
+
+; Database Options (only use, if you know, what it does)
+;Options[]=
+;Options[]=
+;...
+
+; Database Prefix (e.g. ylmk_)
+Prefix=""
+
+;*/
+;?>

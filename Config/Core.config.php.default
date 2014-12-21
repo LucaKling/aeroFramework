@@ -1,0 +1,15 @@
+;<?php
+;die(); // For further security
+;/*
+
+; Core Class Settings
+[Core]
+
+; Database Prefix
+Prefix="Core_"
+
+; Settings table
+SettingsTable="Settings"
+
+;*/
+;?>
