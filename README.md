@@ -1,7 +1,7 @@
-# aeroCMS
+# aeroFramework
 ## What is it?
 
-aeroCMS is a lightweight (not yet finished) Content Management System which is programmed object-oriented.
+aeroFramework is a lightweight (not yet finished) Framework for websites which is programmed object-oriented.
 
 ## Features?
 
@@ -9,9 +9,9 @@ It already features a bunch of (technical) stuff, but there are definitely many 
 Here is a short overview about what you can expect: 
 
 * Create your own `PageController` for dynamic content
-* Blog system (Database [e.g. MySQL] based)
-* Page system (Database [e.g. MySQL] based)
-* Responsive design (Default template will be bootstrap-based)
+* Blog system (Database [e.g. MySQL] based) <- [aeroCMS](https://github.com/LucaKling/aeroCMS)
+* Page system (Database [e.g. MySQL] based) <- [aeroCMS](https://github.com/LucaKling/aeroCMS)
+* Responsive design (Default template will be bootstrap-based) <- [aeroCMS](https://github.com/LucaKling/aeroCMS)
 * Global menu generation
 * Sub(-sub-sub...) menu generation
 * More to come later on
