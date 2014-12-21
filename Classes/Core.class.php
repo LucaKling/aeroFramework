@@ -70,7 +70,7 @@ class Core {
 		} else {
 			$this->RequestURI = $_SERVER['PATH_INFO'];
 		}
-		$this->RequestURI = explode('/', $this->RequestURI);
+		$this->RequestURI = explode('/', ((substr($this->RequestURI, -1) != '/') ? $this->RequestURI . '/' : $this->RequestURI));
 		$this->ForceLowerCase = (($this->Config->DV->{'Reachability.ForceLowerCase'}) ? true : false);
 		
 		// Settings template vars

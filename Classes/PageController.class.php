@@ -19,6 +19,7 @@ class PageController {
 	public $PublicFolder;
 	public $PublicFolderURI;
 	public $PrivateFolder;
+	public $CacheFolder;
 	
 	final public function __construct() {
 		// Loading arg
@@ -39,6 +40,9 @@ class PageController {
 		$this->PrivateFolder = $this->Dirname . DS . 'Private' . DS . md5($this->ClassHash . $this->Config->DV->Salt); // Extra security (Public- differs from Private Folder)
 		if(!is_dir($this->PrivateFolder))
 			mkdir($this->PrivateFolder, 0777, true);
+		$this->CacheFolder = $this->Dirname . DS . 'Cache' . DS . md5($this->ClassHash . $this->Config->DV->Salt . $this->Config->DV->Salt); // Also extra security
+		if(!is_dir($this->CacheFolder))
+			mkdir($this->CacheFolder, 0777, true);
 		
 		// Run user-defined construct function
 		$this->Construct();
