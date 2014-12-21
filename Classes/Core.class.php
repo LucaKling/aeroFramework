@@ -92,13 +92,9 @@ class Core {
 		$PageController['Advanced'] = array();
 		$PageController['Priority'] = array();
 		$PageController['Simple'] = array();
-		$PageController['Files'] = glob($this->Dirname . DS . 'PageController' . DS . '*Controller{,Advanced}.php', GLOB_BRACE);
+		$PageController['Files'] = $this->GetFiles($this->Dirname . DS . 'PageController' . DS, '/[\/\\\][a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*Controller(?:|Advanced).php/');
 		foreach($PageController['Files'] as $Key => $Value) {
 			$Basename = basename($Value);
-			if(!preg_match('/[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*Controller(|Advanced).php/', $Basename)) {  // See: http://us2.php.net/manual/en/userlandnaming.php
-				unset($PageController['Files'][$Key]);
-				continue;
-			}
 			require_once $Value;
 			$Value = substr($Basename, 0, -4);
 			if(substr($Value, -8) == 'Advanced') {
@@ -155,7 +151,31 @@ class Core {
 		return false;
 	}
 	
-	function __destruct() {
-		return true;
+	public static function GetFiles($Dir, $Pattern = false, $Recursive = true) {
+		$RecursiveResult = array();
+		$Result = array();
+		if(substr($Dir, -1) != DS)
+			$Dir .= DS;
+		if(is_dir($Dir)) {
+			if($DirHandler = opendir($Dir)) {
+				while(($File = readdir($DirHandler)) !== false) {
+					if(!in_array($File, array('.', '..'))) {
+						if(is_dir($Dir . $File)) {
+							$Result = array_merge($Result, self::GetFiles($Dir . $File . DS, $Pattern, $Recursive));
+						} else {
+							if($Pattern) {
+								if(preg_match($Pattern, $Dir . $File)) {
+									$Result[] = $Dir . $File;
+								}
+							} else
+								$Result[] = $Dir . $File;
+						}
+					}
+				}
+				closedir($DirHandler);
+				return $Result;
+			}
+		}
+		return false;
 	}
 }
