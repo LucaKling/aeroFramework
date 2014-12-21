@@ -9,9 +9,9 @@ It already features a bunch of (technical) stuff, but there are definitely many 
 Here is a short overview about what you can expect: 
 
 * Create your own `PageController` for dynamic content
-* Blog system (Database [e.g. MySQL] based) <- [aeroCMS](https://github.com/LucaKling/aeroCMS)
-* Page system (Database [e.g. MySQL] based) <- [aeroCMS](https://github.com/LucaKling/aeroCMS)
-* Responsive design (Default template will be bootstrap-based) <- [aeroCMS](https://github.com/LucaKling/aeroCMS)
+* Blog system (Database [e.g. MySQL] based) <- [aeroCMS](https://github.com/LucaKling/aeroCMSControllerAdvanced)
+* Page system (Database [e.g. MySQL] based) <- [aeroCMS](https://github.com/LucaKling/aeroCMSControllerAdvanced)
+* Responsive design (Default template will be bootstrap-based) <- [aeroCMS](https://github.com/LucaKling/aeroCMSControllerAdvanced)
 * Global menu generation
 * Sub(-sub-sub...) menu generation
 * More to come later on
